@@ -1,0 +1,134 @@
+"""
+------------------------------------------------
+PYSPARK EMR
+------------------------------------------------
+author: Rob Dalton
+
+Script file that spins up an EMR cluster with a user's
+default AWS settings and creates ssh alias for cluster.
+
+"""
+from __future__ import division, print_function, absolute_import
+import os
+import boto3
+from ast import literal_eval
+
+
+def create_cluster(emr, cluster_name):
+    """
+    INPUT: emr
+    RETURN: emr, string
+
+    - Creates cluster using boto emr connection if no cluster exists
+    - Returns emr instance if new cluster was created, False otherwise
+    - Returns id of new or existing cluster
+
+    """
+    # Instantiate vars
+    new_cluster = False
+
+    # Check for existing clusters
+    existing_clusters = emr.list_clusters().get('Clusters')
+    active_clusters = [c['Id'] for c in existing_clusters if c['Status']['State'][:4] != 'TERM']
+
+    if active_clusters:
+        cluster_id = active_clusters[0]
+        print("Existing cluster: {} \n".format(cluster_id))
+
+    else:
+        # Create a new EMR cluster with a shell command and get the cluster's ID
+        new_cluster = !aws emr create-cluster  \
+            --name {cluster_name} \
+            --release-label emr-5.0.3  \
+            --applications Name=Spark Name=Hadoop Name=Hive Name=Ganglia Name=Zeppelin \
+            --ec2-attributes KeyName=ec2_rob  \
+            --use-default-roles  \
+            --instance-groups InstanceGroupType=MASTER,InstanceCount=1,InstanceType=m3.xlarge  \
+                              InstanceGroupType=CORE,InstanceCount=2,InstanceType=m3.xlarge  \
+            --bootstrap-actions Path=s3://mileserickson/scripts/pyspark-emr/bootstrap.sh
+        cluster_id = literal_eval(''.join(new_cluster))['ClusterId']
+        print("New cluster launched: {}".format(cluster_id))
+
+    return new_cluster, cluster_id
+
+
+def add_security_group(ec2):
+    """
+    INPUT: boto ec2 instance
+    RETURN: None
+
+    Add a Security Group rule allowing SSH to the cluster
+
+    """
+
+    try:
+        ec2.authorize_security_group_ingress(
+            GroupName='ElasticMapReduce-master',
+            IpProtocol='tcp',
+            FromPort=22,
+            ToPort=22,
+            CidrIp="0.0.0.0/0"
+        )
+        print("Added a rule allowing SSH to Cluster Master on Port 22. Good to go! \n")
+
+    except boto3.exceptions.botocore.exceptions.ClientError as e:
+        if "InvalidPermission.Duplicate" in str(e):
+            print("You already had a rule allowing SSH to Cluster Master on Port 22. Good to go! \n")
+        else:
+            raise e
+
+def append_ssh_config(cluster_alias, cluster_hostname, key_name):
+    """
+    INPUT: string, string, string
+    RETURN: None
+
+    Creates and appends alias for connecting to cluster using
+    cluster info and user defined ssh key.
+
+    """
+
+    ssh_config_block = """
+# PySpark Cluster
+Host {}
+  HostName {}
+  User hadoop
+  IdentityFile ~/.ssh/{}"""
+
+    ! "{ssh_config_block.format(cluster_alias, cluster_hostname, key_name)}" >> ~/.ssh/config
+
+if __name__ == "__main__":
+    # define vars
+    cluster_alias = "aws-spark-cluster"
+    key_name = "ec2_rob.pem"
+    cluster_name = "Capstone-Spark-Cluster"
+
+    # instantiate boto objects
+    ec2 = boto3.client("ec2")
+    emr = boto3.client("emr")
+    s3 = boto3.client("s3")
+
+    # check for AWS key validity
+    try:
+        s3.list_buckets()
+    except boto3.exceptions.botocore.client.ClientError:
+        print("STOP. You do not have valid AWS keys in your environment. Fix this first.")
+
+    # create cluster
+    new_cluster, cluster_id = create_cluster(emr, cluster_name)
+
+    # add security groups
+    add_security_group(ec2)
+
+    # get details of new cluster
+    cluster_info = emr.describe_cluster(ClusterId=cluster_id)
+    cluster_hostname = cluster_info['Cluster']['MasterPublicDnsName']
+
+    if new_cluster:
+   	# append cluster info to ssh config
+    	append_ssh_config(cluster_alias, cluster_hostname, key_name)
+
+    # print command to ssh into cluster
+    ssh_tunnel_command = "ssh -NfL localhost:9999:localhost:8888 {}"
+
+    print("Run command below to connect to cluster:")
+    print(ssh_tunnel_command.format(cluster_alias))
