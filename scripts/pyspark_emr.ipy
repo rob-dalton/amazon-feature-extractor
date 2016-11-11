@@ -94,7 +94,7 @@ Host {}
   User hadoop
   IdentityFile ~/.ssh/{}"""
 
-    ! "{ssh_config_block.format(cluster_alias, cluster_hostname, key_name)}" >> ~/.ssh/config
+    ! echo "{ssh_config_block.format(cluster_alias, cluster_hostname, key_name)}" >> ~/.ssh/config
 
 if __name__ == "__main__":
     # define vars
@@ -123,9 +123,9 @@ if __name__ == "__main__":
     cluster_info = emr.describe_cluster(ClusterId=cluster_id)
     cluster_hostname = cluster_info['Cluster']['MasterPublicDnsName']
 
+    # append cluster info to ssh config
     if new_cluster:
-   	# append cluster info to ssh config
-    	append_ssh_config(cluster_alias, cluster_hostname, key_name)
+	append_ssh_config(cluster_alias, cluster_hostname, key_name)
 
     # print command to ssh into cluster
     ssh_tunnel_command = "ssh -NfL localhost:9999:localhost:8888 {}"
