@@ -5,20 +5,18 @@ The code in the <code>src</code> directory requires Spark to run. The files in t
 It's recommended that this analysis be performed using distributed computing instead of a single local machine.
 
 ### <code>pyspark_emr.ipy</code>
-iPython script file that spins up an EMR instance using AWS. Requires that you have <code>awscli</code> installed and configured with the proper credentials.
+- iPython script file. Spins up an AWS EMR instance
 
-Also creates an alias for your cluster and appends the block for this alias to your <code>~/.ssh/config</code> file.
+- Requires <code>awscli</code>
 
-You must provide an authorized <code>ssh</code> key for authentication with AWS, and specify the name of the local file with the variable below:
-```python
-key_name = "<your-key-filename>"
-```
+- Creates <code>ssh</code> ssh to login to cluster. Appends the block for this alias to your <code>~/.ssh/config</code> file.
 
-You may also change the name and alias of the cluster by modifying these variables:
-```python
-cluster_alias = "<your-alias-name>"
-cluster_name = "<your-cluster-name>"
-```
+- *NOTE:* Must provide an authorized <code>ssh</code> key for authentication with AWS by setting <code>key_name = "your-key-filename"</code>
+
+- Can change the cluster name and alias by modifying:
+<code>cluster_alias = "your-alias-name"</code> and <code>cluster_name = "your-cluster-name"</code>
 
 ### <code>jupyspark_emr.sh</code>
-Bash script file that configures
+- Bash script file
+- Configures your spark cluster
+- Spins up Jupyter notebook server
