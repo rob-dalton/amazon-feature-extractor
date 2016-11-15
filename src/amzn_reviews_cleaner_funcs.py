@@ -96,7 +96,7 @@ def add_tfidf(df):
 
 
 # Extract features
-def add_top_features(df_tfidf, vocab, n=10):
+def add_top_features(df, vocab, n=10):
 
     def extract_top_features(idf_vector, n):
         # Get indices of top n features
@@ -112,11 +112,18 @@ def add_top_features(df_tfidf, vocab, n=10):
     extract_features_udf = udf(lambda x: extract_top_features(x, n))
 
     # Apply udf, create new df with features column
-    df_features = df_tfidf.withColumn("top_features",
-                                    extract_features_udf(df_tfidf["idf_vector"]))
+    df_features = df.withColumn("top_features",
+                                    extract_features_udf(df["idf_vector"]))
 
     return df_features
 
+def add_top_features_by_type(df, vocab, n=10):
+    pass
+
+# add metadata
+def add_product_categories(df_products, df_meta):
+    df_cats = df_meta.select("asin", "categories")
+    return df_products.join(df_cats, df_products.asin == df_cats.asin)
 
 if __name__=="__main__":
     pass
