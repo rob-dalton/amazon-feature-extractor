@@ -46,7 +46,7 @@ def tokenize(df):
     df_raw_tokens = tokenizer.transform(df)
 
     # remove empty tokens
-    #df_raw_tokens_clean = remove_empty_tokens(df_raw_tokens)
+    df_raw_tokens_clean = remove_empty_tokens(df_raw_tokens)
 
     return df_raw_tokens
 
