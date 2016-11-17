@@ -1,7 +1,9 @@
 """
+========================================
 ----------------------------------------
-AMAZON REVIEWS CLEANER FUNCTIONS
+AMAZON REVIEWS - DATA PROCESSING
 ----------------------------------------
+========================================
 
 Module containing helper functions for
 data cleaning.
@@ -17,7 +19,14 @@ from pyspark.ml.feature import Tokenizer, CountVectorizer, StopWordsRemover, NGr
 from nltk.corpus import stopwords
 from string import maketrans
 
-# TFIDF helper functions
+
+"""
+========================================
+TOKENIZATION FUNCTIONS
+========================================
+Functions to tokenize reviewText
+
+"""
 def clean_reviewText(df):
     # create translation table for punctuation
     intab = '~!@#$%^&*()-_+=[]}{\|;:"<>,.?/'
@@ -58,6 +67,27 @@ def remove_stop_words(df):
     return df_tokens
 
 
+def add_tokens(df):
+    # clean
+    df_clean = clean_reviewText(df)
+
+    # tokenize
+    df_raw_tokens = tokenize(df_clean)
+
+    # remove stopwords
+    df_tokens = remove_stop_words(df_raw_tokens)
+
+    return df_tokens
+
+
+"""
+========================================
+TFIDF VECTORIZATION FUNCTIONS
+========================================
+Functions to create TFIDF vectors and
+extract vocabulary for vectors
+
+"""
 def add_tf_and_vocab(df):
     cv = CountVectorizer(inputCol="tokens", outputCol="tf_vector")
     tf_model = cv.fit(df)
@@ -68,40 +98,38 @@ def add_tf_and_vocab(df):
     return df_tf, vocab
 
 
-def add_idf(df):
-    idf = IDF(inputCol="tf_vector", outputCol="idf_vector")
-    idf_model = idf.fit(df)
-    df_idf = idf_model.transform(df)
-
-    return df_idf
-
-
 def add_tfidf(df):
-    # clean
-    df_clean = clean_reviewText(df)
+    idf = IDF(inputCol="tf_vector", outputCol="tfidf_vector")
+    idf_model = idf.fit(df)
+    df_tfidf = idf_model.transform(df)
 
-    # tokenize
-    df_raw_tokens = tokenize(df_clean)
+    return df_tfidf
 
-    # remove stopwords
-    df_tokens = remove_stop_words(df_raw_tokens)
 
+def add_tfidf(df_tokens):
     # add tf vectors, get vocabulary
     df_tf, vocab = add_tf_and_vocab(df_tokens)
 
-    # add idf vectors
-    df_idf = add_idf(df_tf)
+    # add tfidf vectors
+    df_tfidf = add_tfidf(df_tf)
 
-    return df_idf, vocab
+    return df_tfidf, vocab
 
 
-# Extract features
+"""
+========================================
+TFIDF MAPPING FUNCTIONS
+========================================
+Functions to map elements in TFIDF
+vectors to terms in vocabularies
+
+"""
 def add_top_features(df, vocab, n=10):
 
-    def extract_top_features(idf_vector, n):
+    def extract_top_features(tfidf_vector, n):
         # Get indices of top n features
         # note - tfidf elements are pre-sorted by importance
-        term_indices = idf_vector.indices[-n:]
+        term_indices = tfidf_vector.indices[-n:]
 
         # Map features to terms
         features = [vocab[i] for i in term_indices]
@@ -113,17 +141,37 @@ def add_top_features(df, vocab, n=10):
 
     # Apply udf, create new df with features column
     df_features = df.withColumn("top_features",
-                                    extract_features_udf(df["idf_vector"]))
+                                    extract_features_udf(df["tfidf_vector"]))
 
     return df_features
 
-def add_top_features_by_type(df, vocab, n=10):
+
+def add_top_features_by_category(df, vocab, n=10):
     pass
 
-# add metadata
-def add_product_categories(df_products, df_meta):
-    df_cats = df_meta.select("asin", "categories")
-    return df_products.join(df_cats, df_products.asin == df_cats.asin)
 
+"""
+========================================
+METADATA FUNCTIONS
+========================================
+Functions to join product review data
+with metadata
+
+"""
+def add_categories(df_products, df_meta):
+    # select fields to join
+    df_meta_subset = df_meta.select("asin", "categories")
+
+    # join fields on product id asin
+    df_cats = df_products.join(df_meta_subset, df_products.asin == df_meta_subset.asin).drop(df_meta_subset.asin)
+
+    return df_cats
+
+
+"""
+========================================
+MAIN
+========================================
+"""
 if __name__=="__main__":
     pass

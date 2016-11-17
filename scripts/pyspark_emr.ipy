@@ -42,7 +42,7 @@ def create_cluster(emr, cluster_name):
             --release-label emr-5.0.3  \
             --applications Name=Spark Name=Hadoop Name=Hive Name=Ganglia Name=Zeppelin \
             --ec2-attributes KeyName=ec2_rob  \
-            --service-role s3_only  \
+            --use-default-roles  \
             --instance-groups InstanceGroupType=MASTER,InstanceCount=1,InstanceType=m3.xlarge  \
                               InstanceGroupType=CORE,InstanceCount=2,InstanceType=m3.xlarge  \
             --bootstrap-actions Path=s3://mileserickson/scripts/pyspark-emr/bootstrap.sh

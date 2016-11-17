@@ -15,8 +15,3 @@ It's recommended that this analysis be performed using distributed computing ins
 
 - Can change the cluster name and alias by modifying:
 <code>cluster_alias = "your-alias-name"</code> and <code>cluster_name = "your-cluster-name"</code>
-
-### <code>jupyspark_emr.sh</code>
-- Bash script file
-- Configures your spark cluster
-- Spins up Jupyter notebook server
