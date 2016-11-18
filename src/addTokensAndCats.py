@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
 
     # subset asin, reviewText
-    df_subset = df.select("asin", "reviewText").limit(1000)
+    df_subset = df.select("asin", "reviewText")
     
     
     # add tokens
@@ -40,5 +40,5 @@ if __name__ == "__main__":
     df_cats = dp.add_categories(df_tokens, df_meta)
     
     # write to s3
-    df_cats.write.json("s3a://amazon-review-data/review-data.json")
+    df_cats.write.mode('append').json("s3a://amazon-review-data/review-data")
 

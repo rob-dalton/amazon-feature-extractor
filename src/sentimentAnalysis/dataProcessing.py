@@ -42,14 +42,14 @@ def clean_reviewText(df):
 
 def remove_empty_tokens(df):
     remove_empty_udf = udf(lambda x: filter(None, x), ArrayType(StringType()))
-    df_raw_tokens_clean = df.withColumn("raw_tokens", remove_empty_udf(df["raw_tokens"]))
+    df_raw_tokens_clean = df.withColumn("rawTokens", remove_empty_udf(df["rawTokens"]))
 
     return df_raw_tokens_clean
 
 
 def tokenize(df):
     # instantiate tokenizer
-    tokenizer = Tokenizer(inputCol="cleanText", outputCol="raw_tokens")
+    tokenizer = Tokenizer(inputCol="cleanText", outputCol="rawTokens")
 
     # create tokens
     df_raw_tokens = tokenizer.transform(df)
@@ -57,11 +57,11 @@ def tokenize(df):
     # remove empty tokens
     df_raw_tokens_clean = remove_empty_tokens(df_raw_tokens)
 
-    return df_raw_tokens
+    return df_raw_tokens_clean
 
 
 def remove_stop_words(df):
-    remover = StopWordsRemover(inputCol="raw_tokens", outputCol="tokens", stopWords=stopwords.words("english"))
+    remover = StopWordsRemover(inputCol="rawTokens", outputCol="tokens", stopWords=stopwords.words("english"))
     df_tokens = remover.transform(df)
 
     return df_tokens
@@ -158,9 +158,9 @@ Functions to join product review data
 with metadata
 
 """
-def add_categories(df_products, df_meta):
+def join_metadata(df_products, df_meta):
     # select fields to join
-    df_meta_subset = df_meta.select("asin", "categories")
+    df_meta_subset = df_meta.select("asin", "categories", "salesRank")
 
     # join fields on product id asin
     df_cats = df_products.join(df_meta_subset, df_products.asin == df_meta_subset.asin).drop(df_meta_subset.asin)

@@ -42,14 +42,14 @@ def clean_reviewText(df):
 
 def remove_empty_tokens(df):
     remove_empty_udf = udf(lambda x: filter(None, x), ArrayType(StringType()))
-    df_raw_tokens_clean = df.withColumn("raw_tokens", remove_empty_udf(df["raw_tokens"]))
+    df_raw_tokens_clean = df.withColumn("rawTokens", remove_empty_udf(df["rawTokens"]))
 
     return df_raw_tokens_clean
 
 
 def tokenize(df):
     # instantiate tokenizer
-    tokenizer = Tokenizer(inputCol="cleanText", outputCol="raw_tokens")
+    tokenizer = Tokenizer(inputCol="cleanText", outputCol="rawTokens")
 
     # create tokens
     df_raw_tokens = tokenizer.transform(df)
@@ -57,11 +57,11 @@ def tokenize(df):
     # remove empty tokens
     df_raw_tokens_clean = remove_empty_tokens(df_raw_tokens)
 
-    return df_raw_tokens
+    return df_raw_tokens_clean
 
 
 def remove_stop_words(df):
-    remover = StopWordsRemover(inputCol="raw_tokens", outputCol="tokens", stopWords=stopwords.words("english"))
+    remover = StopWordsRemover(inputCol="rawTokens", outputCol="tokens", stopWords=stopwords.words("english"))
     df_tokens = remover.transform(df)
 
     return df_tokens
@@ -98,22 +98,22 @@ def add_tf_and_vocab(df):
     return df_tf, vocab
 
 
-def add_idf(df):
-    idf = IDF(inputCol="tf_vector", outputCol="idf_vector")
+def add_tfidf(df):
+    idf = IDF(inputCol="tf_vector", outputCol="tfidf_vector")
     idf_model = idf.fit(df)
-    df_idf = idf_model.transform(df)
+    df_tfidf = idf_model.transform(df)
 
-    return df_idf
+    return df_tfidf
 
 
 def add_tfidf(df_tokens):
     # add tf vectors, get vocabulary
     df_tf, vocab = add_tf_and_vocab(df_tokens)
 
-    # add idf vectors
-    df_idf = add_idf(df_tf)
+    # add tfidf vectors
+    df_tfidf = add_tfidf(df_tf)
 
-    return df_idf, vocab
+    return df_tfidf, vocab
 
 
 """
@@ -126,10 +126,10 @@ vectors to terms in vocabularies
 """
 def add_top_features(df, vocab, n=10):
 
-    def extract_top_features(idf_vector, n):
+    def extract_top_features(tfidf_vector, n):
         # Get indices of top n features
         # note - tfidf elements are pre-sorted by importance
-        term_indices = idf_vector.indices[-n:]
+        term_indices = tfidf_vector.indices[-n:]
 
         # Map features to terms
         features = [vocab[i] for i in term_indices]
@@ -141,7 +141,7 @@ def add_top_features(df, vocab, n=10):
 
     # Apply udf, create new df with features column
     df_features = df.withColumn("top_features",
-                                    extract_features_udf(df["idf_vector"]))
+                                    extract_features_udf(df["tfidf_vector"]))
 
     return df_features
 
@@ -158,9 +158,9 @@ Functions to join product review data
 with metadata
 
 """
-def add_categories(df_products, df_meta):
+def join_metadata(df_products, df_meta):
     # select fields to join
-    df_meta_subset = df_meta.select("asin", "categories")
+    df_meta_subset = df_meta.select("asin", "categories", "salesRank")
 
     # join fields on product id asin
     df_cats = df_products.join(df_meta_subset, df_products.asin == df_meta_subset.asin).drop(df_meta_subset.asin)
