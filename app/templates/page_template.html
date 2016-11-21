@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/style.css')}}"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/jQuery.smoothState.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/main.js')}}"></script>
+  </head>
+
+  <body>
+    <div class="m-scene" id="main">
+      <header class="m-header scene_element scene_element--fadeindown">
+        <h1 id="site-title">
+          <a href="/">{{ site_title }}</a>
+        </h1>
+      </header>
+      <div id="content" class="m-page scene_element scene_element--fadein">
+        {% block content %}{{ content }}{% endblock %}
+      </div>
+      <footer class="m-page scene_element scene_element--fadeinup">
+        <div class="wrapper">
+          <p>All content &copy;2016 Rob+1</p>
+          <p class="disclaimer">under penalty of death.</p>
+        </div>
+      </footer>
+    </div>
+  </body>
+
+</html>

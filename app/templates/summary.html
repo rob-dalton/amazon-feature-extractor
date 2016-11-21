@@ -1,0 +1,29 @@
+{% extends "page_template.html" %}
+{% block content %}
+<div class="wrapper summary">
+  <div class="page-header">
+    <h2 id="page-title">{{ page_title }}</h2>
+  </div>
+  <div class="counts section">
+    <h3>Predictions</h3>
+	   <table class="risk">
+       <tr><td class="label">High</td><td>{{ high }} %</td></tr>
+       <tr><td class="label">Med</td><td>{{ medium }} %</td></tr>
+       <tr><td class="label">Low</td><td>{{ low }} %</td></tr>
+     </table>
+  </div>
+  <div class="performance section">
+    <h3>Performance Metrics</h3>
+    {{ performance }}
+    <h4>ROC Curve</h4>
+    <img class="plot" src="{{ url_for('static', filename='assets/roc.png')}}"/>
+    <h4>Fraud Captured</h4>
+    <img class="plot" src="{{ url_for('static', filename='assets/fraud_captured.png')}}"/>
+  </div>
+  <div class="importances section">
+    <h3>Feature Importances</h3>
+    {{ importances }}
+  </div>
+  <a class="button" href="/overview">App Overview</a>
+</div>
+{% endblock %}

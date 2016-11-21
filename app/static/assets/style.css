@@ -1,0 +1,284 @@
+body {
+  font-size: 1.125rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  margin: 0;
+  text-align: center;
+}
+div#main {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* GENERAL */
+h1, h2, h3, h4 {
+   font-weight: 300;
+   margin: .33em 0 .67em;
+}
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2.33rem;
+}
+h3 {
+  font-size: 1.67rem;
+}
+
+/* HEADER + TITLES */
+header {
+  display: inline-block;
+  width: 100%;
+  background-color: #343838;
+  clear:both;
+}
+h1#site-title {
+  color: #FF9339;
+}
+h1#site-title a{
+  color: inherit;
+  text-decoration: none;
+}
+div.page-header {
+    margin: 3em 0 .67em;
+}
+h2#page-title {
+  color: #232828;
+}
+
+/* MAIN */
+div#content {
+  margin: .67em auto 0;
+  padding-bottom: 7rem;
+  width: 67%;
+  max-width: 720px;
+}
+
+/* FOOTER */
+footer {
+  font-size: 1rem;
+  color: #2A1300;
+  background-color: #CED6D6;
+  padding: .67em 0 1.33em;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+footer p {
+  margin: 0;
+}
+footer p.disclaimer {
+  opacity: 0.33;
+}
+
+/* INDEX */
+div.index .landing p {
+  font-weight: 400;
+}
+
+/* SUMMARY */
+/*
+div.summary, div.workflow {
+  text-align: left;
+}
+*/
+div.section {
+  margin: 3rem 0;
+}
+div.section table {
+  margin: auto;
+  text-align: left;
+}
+div.summary table td {
+  padding: 0 .67em;
+}
+div.summary table td.label{
+  font-weight: 400;
+}
+div.summary img.plot {
+  height: auto;
+  width: 67%;
+  max-width: 720px;
+}
+div.summary table.performance {
+  margin-bottom: 7rem;
+}
+div.summary h4 {
+  margin-top: 5rem;
+}
+
+/* OVERVIEW */
+div.overview img.diagram{
+  width: 100%;
+  height: auto;
+}
+
+/* OTHER */
+div#main-content form input{
+  display: block;
+  margin: .67rem auto;
+}
+form textarea{
+  width: 25%;
+  height: 25vh;
+  max-height: 320px;
+  max-width: 480px;
+}
+a.button {
+  display: inline-block;
+  clear: both;
+  margin: 1.67rem 0 0;
+  text-decoration: none;
+  color: #FF9339;
+  text-transform: capitalize;
+  background-color: #343838;
+  border-radius: .33rem;
+  padding: .67rem;
+  cursor:pointer;
+}
+a.button:hover {
+  opacity: 0.67;
+}
+
+/*-------------------------------------------*/
+
+/*
+ * CSS PAGE TRANSITIONS
+ *
+ */
+
+
+/* Animations
+ *
+ */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeOutUp {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 100%, 0);
+  }
+}
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@-webkit-keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Page Transitions
+ * Don't forget to add vendor prefixes!
+ */
+.m-scene .scene_element {
+    -moz-animation-duration: .033s;
+    -webkit-animation-duration: .033s;
+    animation-duration: 0.33s;
+
+    -moz-transition-timing-function: ease-in;
+    -webkit-transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+
+    -moz-animation-fill-mode: both;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.m-scene .scene_element--fadein {
+    -moz-animation-name: fadeIn;
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+
+.m-scene .scene_element--fadeinup {
+    -moz-animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+}
+
+.m-scene .scene_element--fadeindown {
+    -moz-animation-name: fadeInDown;
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+}
+
+.m-scene .scene_element--fadeinright {
+    -moz-animation-name: fadeInUp;
+    -webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+}
+.m-scene .scene_element--fadeinleft {
+    -moz-animation-name: fadeInDown;
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+}
+
+/** Reverse "exit" animations */
+.m-scene.is-exiting .scene_element {
+    -moz-animation-direction: alternate-reverse;
+    -webkit-animation-direction: alternate-reverse;
+    animation-direction: alternate-reverse;
+}
+
+/*-------------------------------------------*/

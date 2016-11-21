@@ -1,0 +1,16 @@
+{% extends "page_template.html" %}
+{% block content %}
+<div class="wrapper index">
+  <div class="page-header">
+    <h2 id="page-title">{{ page_title }}</h2>
+  </div>
+  <div class="landing">
+    <p>This is our app. Revel in its glory.</p>
+  </div>
+  <div class="description">
+    <p>This app classifies cases as being of a high, medium, or low risk of being faudulent.</p>
+    <p>We've summarized the statistics of the cases we've classified so far.</p>
+    <a class="button" href="/summary">Model Summary</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "page_template.html" %}
+{% block content %}
+<div class="wrapper overview">
+  <div class="page-header">
+    <h2 id="page-title">{{ page_title }}</h2>
+  </div>
+    <div class="workflow section">
+    <h3>Workflow</h3>
+    <img class="diagram" src="{{ url_for('static', filename='assets/workflow.png')}}"/>
+  </div>
+</div>
+{% endblock %}
