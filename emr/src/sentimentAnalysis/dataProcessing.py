@@ -160,7 +160,7 @@ with metadata
 """
 def join_metadata(df_products, df_meta):
     # select fields to join
-    df_meta_subset = df_meta.select("asin", "categories", "salesRank")
+    df_meta_subset = df_meta.select("asin", "categories")
 
     # join fields on product id asin
     df_cats = df_products.join(df_meta_subset, df_products.asin == df_meta_subset.asin).drop(df_meta_subset.asin)
