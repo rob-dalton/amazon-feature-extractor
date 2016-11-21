@@ -106,16 +106,6 @@ def add_tfidf(df):
     return df_tfidf
 
 
-def add_tfidf(df_tokens):
-    # add tf vectors, get vocabulary
-    df_tf, vocab = add_tf_and_vocab(df_tokens)
-
-    # add tfidf vectors
-    df_tfidf = add_tfidf(df_tf)
-
-    return df_tfidf, vocab
-
-
 """
 ========================================
 TFIDF MAPPING FUNCTIONS
@@ -146,10 +136,6 @@ def add_top_features(df, vocab, n=10):
     return df_features
 
 
-def add_top_features_by_category(df, vocab, n=10):
-    pass
-
-
 """
 ========================================
 METADATA FUNCTIONS
@@ -160,7 +146,7 @@ with metadata
 """
 def join_metadata(df_products, df_meta):
     # select fields to join
-    df_meta_subset = df_meta.select("asin", "categories", "salesRank")
+    df_meta_subset = df_meta.select("asin", "categories")
 
     # join fields on product id asin
     df_cats = df_products.join(df_meta_subset, df_products.asin == df_meta_subset.asin).drop(df_meta_subset.asin)

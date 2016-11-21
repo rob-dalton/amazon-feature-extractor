@@ -6,7 +6,6 @@ import requests
 import pandas as pd
 import numpy as np
 import pymongo as mdb
-from transformations import trans_func, fraud_risk, model_importance
 
 app = Flask(__name__)
 
@@ -130,12 +129,5 @@ if __name__ == '__main__':
     coll = db.cases
     my_port = 8080
     my_ip = socket.gethostbyname(socket.gethostname())
-    with open('./model.pkl') as f:
-        model = pickle.load(f)
-    with open('./model_perf.pkl') as f:
-        perf_metrics = pickle.load(f)
-
-    # run setup functions
-    register_url(my_ip, my_port)
-
+    
     app.run(host='0.0.0.0', port=my_port, debug=True)

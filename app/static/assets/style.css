@@ -29,7 +29,7 @@ h3 {
 header {
   display: inline-block;
   width: 100%;
-  background-color: #343838;
+  background-color: #232f3e;
   clear:both;
 }
 h1#site-title {
@@ -57,8 +57,8 @@ div#content {
 /* FOOTER */
 footer {
   font-size: 1rem;
-  color: #2A1300;
-  background-color: #CED6D6;
+  color: #1B1D20;
+  background-color: #D4D7DB;
   padding: .67em 0 1.33em;
   width: 100%;
   position: absolute;
@@ -131,7 +131,7 @@ a.button {
   text-decoration: none;
   color: #FF9339;
   text-transform: capitalize;
-  background-color: #343838;
+  background-color: #232f3e;
   border-radius: .33rem;
   padding: .67rem;
   cursor:pointer;
