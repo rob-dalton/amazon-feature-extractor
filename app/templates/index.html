@@ -2,15 +2,34 @@
 {% block content %}
 <div class="wrapper index">
   <div class="page-header">
-    <h2 id="page-title">{{ page_title }}</h2>
+    <!--h2 id="page-title">{{ page_title }}</h2-->
   </div>
   <div class="landing">
-    <p>This is our app. Revel in its glory.</p>
-  </div>
-  <div class="description">
-    <p>This app classifies cases as being of a high, medium, or low risk of being faudulent.</p>
-    <p>We've summarized the statistics of the cases we've classified so far.</p>
-    <a class="button" href="/summary">Model Summary</a>
+
+      <div class="container">
+        <div class="row">
+            <div class="col-xs-8 col-xs-offset-2">
+                <div class="input-group">
+                    <div class="input-group-btn search-panel">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_concept">Filter by</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#toys&amp;games">Toys &amp; Games</a></li>
+                          <li class="divider"></li>
+                          <li><a href="#all">All departments</a></li>
+                        </ul>
+                    </div>
+                    <input type="hidden" name="search_param" value="all" id="search_param">
+                    <input type="text" class="form-control" name="x" placeholder="Search term...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    </span>
+                </div>
+            </div>
+        </div>
+      </div>
+
   </div>
 </div>
 {% endblock %}

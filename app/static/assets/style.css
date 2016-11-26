@@ -29,11 +29,7 @@ h3 {
 header {
   display: inline-block;
   width: 100%;
-  background-color: #232f3e;
   clear:both;
-}
-h1#site-title {
-  color: #FF9339;
 }
 h1#site-title a{
   color: inherit;
@@ -41,16 +37,70 @@ h1#site-title a{
 }
 div.page-header {
     margin: 3em 0 .67em;
+    border-bottom: none;
 }
 h2#page-title {
   color: #232828;
+}
+
+/* MAIN-NAV */
+nav#main-nav {
+    background-color: #232f3e;
+    padding: 1.125rem 0;
+}
+nav#main-nav a.nav-link {
+  color: #fff;
+  text-decoration:none;
+  display: inline-block;
+  margin: 0 .67rem;
+}
+
+/* SEARCH */
+form#search {
+  position: relative;
+  display: block;
+  margin: auto;
+  width: 67%;
+  text-align: left;
+  background-color: #ccc;
+  border: 1px #ccc solid;
+}
+form#search select {
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+  height: 1.67rem;
+}
+form#search div.select-bg {
+  background-color: #ccc;
+  height: 1.67rem;
+  min-width: 8.33rem;
+  position: absolute;
+  left: 0;
+  z-index: -1000;
+}
+form#search input.queryText {
+  height: 1rem;
+  border: none;
+  font-size: 1rem;
+  height: 1.67rem;
+}
+form#search input.submit {
+  background-color: #ccc;
+  border: none;
+  font-size: 1rem;
+}
+form#search input:focus,
+form#search select:focus,
+form#search textarea:focus,
+form#search button:focus {
+    outline: none;
 }
 
 /* MAIN */
 div#content {
   margin: .67em auto 0;
   padding-bottom: 7rem;
-  width: 67%;
   max-width: 720px;
 }
 
@@ -129,7 +179,7 @@ a.button {
   clear: both;
   margin: 1.67rem 0 0;
   text-decoration: none;
-  color: #FF9339;
+  color: #fff;
   text-transform: capitalize;
   background-color: #232f3e;
   border-radius: .33rem;

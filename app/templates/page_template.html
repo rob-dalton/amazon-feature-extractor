@@ -2,10 +2,12 @@
 <html>
 
   <head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/bootstrap/bootstrap.min.css')}}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/style.css')}}"/>
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="{{ url_for('static', filename='assets/jQuery.smoothState.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/bootstrap/bootstrap.min.js')}}"></script>  
     <script src="{{ url_for('static', filename='assets/main.js')}}"></script>
   </head>
 
@@ -16,6 +18,13 @@
           <a href="/">{{ site_title }}</a>
         </h1>
       </header>
+      <div id="nav-wrapper" class="m-page scene_element scene_element--fadein">
+        <nav id="main-nav">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/about">About</a>
+          <a class="nav-link" href="/data">Data</a>
+        </nav>
+      </div>
       <div id="content" class="m-page scene_element scene_element--fadein">
         {% block content %}{{ content }}{% endblock %}
       </div>
