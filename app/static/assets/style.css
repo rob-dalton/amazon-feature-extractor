@@ -1,5 +1,5 @@
 body {
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   margin: 0;
@@ -95,6 +95,52 @@ form#search select:focus,
 form#search textarea:focus,
 form#search button:focus {
     outline: none;
+}
+.search-result {
+    margin: 0 auto 1.33rem;
+    width: 33%;
+    min-width: 180px;
+}
+.search-result span {
+    display: block;
+    text-align: left;
+}
+.search-result .result-title a:hover {
+    text-decoration: none;
+}
+
+/* PRODUCT */
+div.product {
+    margin: 3rem auto;
+}
+div.dist-ratings {
+  width: 33%;
+  margin: auto;
+  position: relative;
+  min-width: 210px;
+}
+div.dist-ratings .row {
+  margin: 0 auto .67rem;
+}
+div.dist-ratings .bar {
+  display: inline-block;
+  width: 50%;
+  height: 1rem;
+  background-color: #eee;
+}
+div.dist-ratings .fill {
+  display: block;
+  height: 1rem;
+  background-color: gold;
+}
+div.dist-ratings .rating {
+  width: 12%;
+  display: inline-block;
+}
+div.dist-ratings .count {
+    margin-left: .67rem;
+    display: inline-block;
+    width: 12.5%;
 }
 
 /* MAIN */

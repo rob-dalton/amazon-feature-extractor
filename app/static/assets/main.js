@@ -1,4 +1,24 @@
 /*********************************
+ * HELPER FUNCTIONS              *
+ * Animations not related to     *
+ * page transitions              *
+ *                               *
+ *********************************/
+
+function initSearch() {
+  $('.search-panel .dropdown-menu').find('a').click(function(e) {
+      e.preventDefault();
+      var param = $(this).attr("href").replace("#","");
+      var category = $(this).text();
+      $('.search-panel span#category').text(category);
+      $('.input-group #queryFilter').val(param);
+  });
+  $('form#searchBar .input-group-btn button.submit').click(function() {
+      $('form#searchBar').submit()
+  });
+}
+
+/*********************************
  * PAGE TRANSITIONS              *
  * Powered by smoothstate.js     *
  *                               *
@@ -28,6 +48,9 @@ $(function () {
                     // Inject the new content
                     $container.html($newContent);
                 }
+            },
+            onAfter: function ($container, $newContent) {
+                initSearch();
             }
         },
         smoothState = $page.smoothState(options).data('smoothState');
@@ -40,11 +63,5 @@ $(function () {
  *********************************/
 
 $(document).ready(function(e){
-    $('.search-panel .dropdown-menu').find('a').click(function(e) {
-        e.preventDefault();
-        var param = $(this).attr("href").replace("#","");
-        var concept = $(this).text();
-        $('.search-panel span#search_concept').text(concept);
-        $('.input-group #search_param').val(param);
-    });
+    initSearch();
 });
