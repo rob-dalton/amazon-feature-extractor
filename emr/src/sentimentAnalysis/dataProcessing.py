@@ -89,7 +89,7 @@ extract vocabulary for vectors
 
 """
 def add_tf_and_vocab(df):
-    cv = CountVectorizer(inputCol="tokens", outputCol="tf_vector")
+    cv = CountVectorizer(inputCol="tokens", outputCol="tf_vector", minDF=2.0)
     tf_model = cv.fit(df)
     df_tf = tf_model.transform(df)
 
@@ -106,16 +106,6 @@ def add_tfidf(df):
     return df_tfidf
 
 
-def add_tfidf(df_tokens):
-    # add tf vectors, get vocabulary
-    df_tf, vocab = add_tf_and_vocab(df_tokens)
-
-    # add tfidf vectors
-    df_tfidf = add_tfidf(df_tf)
-
-    return df_tfidf, vocab
-
-
 """
 ========================================
 TFIDF MAPPING FUNCTIONS
@@ -124,30 +114,63 @@ Functions to map elements in TFIDF
 vectors to terms in vocabularies
 
 """
+def extract_top_features(tfidf_vector, vocab, n):
+    """
+    INPUT: SparseVector, List, Int
+    RETURN: List
+
+    Take in TFIDF vector, vocabulary for vector,
+    and number of terms. Return top n terms
+
+    """
+    # note - tfidf elements are pre-sorted by importance
+    term_indices = tfidf_vector.indices[-n:]
+    
+    # Map features to terms
+    features = [vocab[i] for i in term_indices]
+
+    return features
+
+
 def add_top_features(df, vocab, n=10):
+    """
+    INPUT: PySpark DataFrame, List, Int
+    RETURN: PySpark DataFrame
 
-    def extract_top_features(tfidf_vector, n):
-        # Get indices of top n features
-        # note - tfidf elements are pre-sorted by importance
-        term_indices = tfidf_vector.indices[-n:]
-
-        # Map features to terms
-        features = [vocab[i] for i in term_indices]
-
-        return features
-
+    Take in DataFrame with TFIDF vectors, list of vocabulary words,
+    and number of features to extract. Map top features from TFIDF
+    vectors to vocabulary terms. Return new DataFrame with terms
+    
+    """
     # Create udf function to extract top n features
-    extract_features_udf = udf(lambda x: extract_top_features(x, n))
+    extract_features_udf = udf(lambda x: extract_top_features(x, vocab, n))
 
     # Apply udf, create new df with features column
     df_features = df.withColumn("top_features",
-                                    extract_features_udf(df["tfidf_vector"]))
+                                    extract_features_udf(df["tfidf_vectors_sum"]))
+
 
     return df_features
 
 
-def add_top_features_by_category(df, vocab, n=10):
-    pass
+def add_pos_neg_features(df, vocab_pos, vocab_neg, n=10):
+    """
+    INPUT: Spark DataFrame, List, List, Int
+    RETURN: Spark DataFrame
+
+    Take in DataFrame grouped by asin, positive with tfidf vectors summed.
+    Extract top positive and negative terms from each group, add features column
+
+    """
+    # split dataframe on postitive
+    df_pos = df.where(df.positive==True)
+    df_neg = df.where(df.positive==False)
+
+    # add features
+    df_pos_terms = add_top_features(df_pos, vocab_pos, n)
+    df_neg_terms = add_top_features(df_neg, vocab_neg, n)
+    
+    return df_pos_terms.unionAll(df_neg_terms)
 
 
 """
@@ -160,7 +183,7 @@ with metadata
 """
 def join_metadata(df_products, df_meta):
     # select fields to join
-    df_meta_subset = df_meta.select("asin", "categories")
+    df_meta_subset = df_meta.select("asin", "title", "categories")
 
     # join fields on product id asin
     df_cats = df_products.join(df_meta_subset, df_products.asin == df_meta_subset.asin).drop(df_meta_subset.asin)
