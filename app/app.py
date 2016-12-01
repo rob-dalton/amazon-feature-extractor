@@ -51,10 +51,16 @@ def search():
         count_ratings = sum([result["ratings"][key] for key in result["ratings"]])
         avg_rating = sum_ratings * 1.0 / count_ratings
 
+        # get star image path
+        rating_rounded = int(round(avg_rating * 2) * 5)
+        fname = 'images/stars_{}.svg'.format(rating_rounded)
+        star_path = url_for('static', filename=fname)
+
         #create html
         url = url_for("product", asin=asin)
         html = '<div class="search-result">'
         html += '<span class="result-title"><a href={}>{}</a></span>'.format(url, title)
+        html += '<img class="stars" src="{}" />'.format(star_path)
         html += '<span class="avg-rating">{}</span></div>'.format(round(avg_rating, 2))
 
         results_html += html
