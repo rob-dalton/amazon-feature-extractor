@@ -108,10 +108,18 @@ form#search button:focus {
 .search-result .result-title a:hover {
     text-decoration: none;
 }
+img.stars {
+    width: 12rem;
+    height: auto;
+    margin: auto;
+}
 
 /* PRODUCT */
 div.product {
     margin: 3rem auto;
+}
+div.avg-rating.section {
+    margin: 0 3rem;
 }
 div.dist-ratings, div.posFeatures, div.negFeatures {
   width: 50%;
@@ -195,7 +203,7 @@ div.summary, div.workflow {
 }
 */
 div.section {
-  margin: 3rem 0;
+  margin: 5rem 0;
 }
 div.section table {
   margin: auto;

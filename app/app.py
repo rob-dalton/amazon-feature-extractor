@@ -78,10 +78,16 @@ def product(asin):
     avg_rating = round(sum_ratings * 1.0 / count_ratings, 2)
 
 
-    # build html for ratings
-    ratings_html = '<div class="avg-rating">{}</div>'.format(avg_rating)
+    # get star image path
+    rating_rounded = int(round(avg_rating * 2) * 5)
+    fname = 'images/stars_{}.svg'.format(rating_rounded)
+    star_path = url_for('static', filename=fname)
 
-    # build html for ratings (distribution)
+    # build html for avg_ratings
+    avg_rating_html = '<img class="stars" src="{}" /><div class="avg-rating">{}</div>'.format(star_path, avg_rating)
+
+
+    # build html for ratings distribution
     dist_bars_html = ""
     dist_bar_html = '<div class="bar-row"><span class="rating">{}</span>' \
             + '<span class="bar"><span class="fill" style="width:{}%;"></span></span>' \
@@ -111,7 +117,7 @@ def product(asin):
 
 
     # add dist bars html
-    ratings_html += '<div class="dist-ratings">{}</div>'.format(dist_bars_html)
+    ratings_dist_html = '<div class="dist-ratings">{}</div>'.format(dist_bars_html)
 
 
     # build html for posFeatures
@@ -144,7 +150,8 @@ def product(asin):
     return render_template('product.html',
                            page_title=title,
                            product_title=title,
-                           product_ratings=Markup(ratings_html),
+                           avg_rating=Markup(avg_rating_html),
+                           ratings_dist=Markup(ratings_dist_html),
                            pos_features=Markup(posFeatures_html),
                            neg_features=Markup(negFeatures_html)
                           )
