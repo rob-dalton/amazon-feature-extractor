@@ -113,34 +113,50 @@ form#search button:focus {
 div.product {
     margin: 3rem auto;
 }
-div.dist-ratings {
-  width: 33%;
+div.dist-ratings, div.posFeatures, div.negFeatures {
+  width: 50%;
   margin: auto;
   position: relative;
   min-width: 210px;
 }
-div.dist-ratings .row {
+div.bar-row .row {
   margin: 0 auto .67rem;
 }
-div.dist-ratings .bar {
+div.bar-row .bar {
   display: inline-block;
   width: 50%;
   height: 1rem;
   background-color: #eee;
 }
-div.dist-ratings .fill {
+div.bar-row .fill {
   display: block;
   height: 1rem;
   background-color: gold;
 }
-div.dist-ratings .rating {
+div.bar-row .rating {
   width: 12%;
   display: inline-block;
 }
-div.dist-ratings .count {
+div.bar-row .count {
     margin-left: .67rem;
     display: inline-block;
     width: 12.5%;
+}
+div.posFeatures, div.negFeatures {
+  text-align: left;
+}
+div.posFeatures .fill {
+  background-color: green;
+}
+div.negFeatures .fill {
+  background-color: darkred;
+}
+div.feature {
+  float: left;
+  width: 16.67%;
+}
+div.feature-row .value {
+  margin-left: 1rem;
 }
 
 /* MAIN */

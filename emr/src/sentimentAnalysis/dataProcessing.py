@@ -126,8 +126,8 @@ def extract_top_features(tfidf_vector, vocab, n):
     # note - tfidf elements are pre-sorted by importance
     term_indices = tfidf_vector.indices[-n:]
     
-    # Map features to terms
-    features = [vocab[i] for i in term_indices]
+    # map features to terms
+    features = [[vocab[i], tfidf_vector[i]] for i in term_indices]
 
     return features
 

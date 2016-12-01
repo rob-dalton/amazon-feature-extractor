@@ -6,6 +6,7 @@ import requests
 import pandas as pd
 import numpy as np
 import pymongo as mdb
+import operator
 
 app = Flask(__name__)
 
@@ -62,6 +63,8 @@ def search():
                             page_title="Search Results",
                             results=Markup(results_html)
                           )
+
+
 # product page
 @app.route('/product/<string:asin>')
 def product(asin):
@@ -106,25 +109,36 @@ def product(asin):
                                              bar_width,
                                              bar_width)
 
-    
+
     # add dist bars html
     ratings_html += '<div class="dist-ratings">{}</div>'.format(dist_bars_html)
 
 
     # build html for posFeatures
+    feature_html = '<div class="feature-row"><div class="feature">{}</div>' \
+        + '<div class="bar-row"><span class="rating"></span>' \
+        + '<span class="bar"><span class="fill" style="width:{}%;"></span></span>' \
+        + '<span class="value">{}%</span></div></div>'
+
     posFeatures_html = "None"
     if "posFeatures" in product.keys():
+        posFeatures = sorted(product["posFeatures"], key=lambda x: float(x[1]))
         temp = ""
-        for feature in product["posFeatures"]:
-            temp += feature+", "
+        total_importance = sum([float(feature[1]) for feature in posFeatures])
+        for feature in posFeatures:
+            rel_importance = round(total_importance / float(feature[1]), 1)
+            temp += feature_html.format(feature[0], rel_importance, rel_importance)
         posFeatures_html = '<div class="posFeatures">{}</div>'.format(temp.strip(', '))
 
     # build html for negFeatures
     negFeatures_html = "None"
     if "negFeatures" in product.keys():
+        negFeatures = sorted(product["negFeatures"], key=lambda x: float(x[1]))
         temp = ""
-        for feature in product["negFeatures"]:
-            temp += feature+", "
+        total_importance = sum([float(feature[1]) for feature in negFeatures])
+        for feature in negFeatures:
+            rel_importance = round(total_importance / float(feature[1]), 1)
+            temp += feature_html.format(feature[0], rel_importance, rel_importance)
         negFeatures_html = '<div class="negFeatures">{}</div>'.format(temp.strip(", "))
 
     return render_template('product.html',
