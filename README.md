@@ -1,6 +1,6 @@
 # Amazon Product Recommender
 ## Overview
-An application that extracts the most criticized attributes of negatively reviewed products and the most praised attributes of highly reviewed products. Eventually, the application will recommends products based on a user specified product type and desired attributes.
+An application that extracts the most criticized attributes of negatively reviewed products and the most praised attributes of highly reviewed products. Eventually, the application will recommend products based on a user specified product type and desired attributes.
 
 *PLEASE NOTE: The product review data used is not current. Many products will no longer exist.*
 
