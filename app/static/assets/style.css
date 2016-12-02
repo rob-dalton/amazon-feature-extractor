@@ -100,11 +100,11 @@ form#search button:focus {
     margin: 0 auto 3rem;
     width: 33%;
     min-width: 180px;
-    text-align: left;
+    text-align: center;
 }
 .search-result span {
     display: block;
-    text-align: left;
+    text-align: center;
 }
 .search-result .result-title a:hover {
     text-decoration: none;
