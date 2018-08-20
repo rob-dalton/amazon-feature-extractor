@@ -1,4 +1,4 @@
-# Amazon Product Recommender
+# Amazon Feature Extractor
 ## Overview
 An application that extracts the most criticized attributes of negatively reviewed products and the most praised attributes of highly reviewed products. Eventually, the application will recommend products based on a user specified product type and desired attributes.
 
